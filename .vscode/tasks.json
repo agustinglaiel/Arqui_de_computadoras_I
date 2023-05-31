@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Compile and Run",
+        "type": "shell",
+        "command": "gcc",
+        "args": ["-std=c11", "-o", "${workspaceFolder}/program", "${file}"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
+  
