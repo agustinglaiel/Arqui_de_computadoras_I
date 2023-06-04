@@ -6,22 +6,11 @@
 void disp_binary(int);
 void delay(int);
 void autofantastico();
+void choque();
+void f1();
 
-void funcion1() {
-    printf("Ha seleccionado la función 1\n");
-    autofantastico();
-}
-
-void funcion2() {
-    printf("Ha seleccionado la función 2\n");
-}
-
-void funcion3() {
+void carrera() {
     printf("Ha seleccionado la función 3\n");
-}
-
-void funcion4() {
-    printf("Ha seleccionado la función 4\n");
 }
 
 void funcion5() {
@@ -51,7 +40,7 @@ void autofantastico()
    char t;
    int on_time;  /* set holding time */
 
-   for (t = 0; t < 10; t++) {
+   for (t = 0; t < 3; t++) {
       output = 0x80;
 
       for (int i = 0; i < 8; i++) {
@@ -71,6 +60,47 @@ void autofantastico()
       }
    }
 }
+
+void choque()
+{
+   unsigned char output;
+   int on_time;  /* set holding time */
+
+   unsigned char patrones[] = {0x81, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x81};
+
+   for (int t = 0; t < 3; t++) {
+      for (int i = 0; i < 8; i++) {
+         output = patrones[i];
+         on_time = 100; /* Tiempo de espera en milisegundos */
+         disp_binary(output);
+         delay(on_time);
+      }
+   }
+}
+
+void f1() {
+   unsigned char output;
+   char t;
+   int on_time;  /* set holding time */
+
+   for (t = 0; t < 1; t++) {
+      output = 0x80;
+
+      for (int i = 2; i < 512; i = (i*2)+2) {
+         on_time = 1000; /* Tiempo de espera en milisegundos */
+         disp_binary(output);
+         delay(on_time); /* Esperar un tiempo */
+         output = output + (output/i); /* Le suma el bit de la derecha */
+      }
+
+      output = 0x00;
+      on_time = 1000; /* Tiempo de espera en milisegundos */
+      disp_binary(output);
+      delay(on_time);
+    
+   }
+}
+
 
 int main() {
     int intentos = 0;
@@ -92,10 +122,10 @@ int main() {
 
             while (true) {
                 printf("Seleccione una función:\n");
-                printf("1 - Función 1\n");
-                printf("2 - Función 2\n");
-                printf("3 - Función 3\n");
-                printf("4 - Función 4\n");
+                printf("1 - Auto Fantástico\n");
+                printf("2 - Choque\n");
+                printf("3 - Carrera\n");
+                printf("4 - Formula 1\n");
                 printf("5 - Función 5\n");
                 printf("6 - Salir\n");
                 printf("Ingrese su opción: ");
@@ -103,16 +133,16 @@ int main() {
 
                 switch (opcion) {
                     case 1:
-                        funcion1();
+                        autofantastico();
                         break;
                     case 2:
-                        funcion2();
+                        choque();
                         break;
                     case 3:
-                        funcion3();
+                        carrera();
                         break;
                     case 4:
-                        funcion4();
+                        f1();
                         break;
                     case 5:
                         funcion5();
