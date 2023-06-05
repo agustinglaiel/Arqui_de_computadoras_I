@@ -8,13 +8,10 @@ void delay(int);
 void autofantastico();
 void choque();
 void f1();
+void choqueinv();
 
-void carrera() {
+void funcion3() {
     printf("Ha seleccionado la función 3\n");
-}
-
-void funcion5() {
-    printf("Ha seleccionado la función 5\n");
 }
 
 void delay(int time)
@@ -101,6 +98,23 @@ void f1() {
    }
 }
 
+void choqueinv()
+{
+   unsigned char output;
+   int on_time;  /* set holding time */
+
+   unsigned char patrones[] = {0x7E, 0xBD, 0xDB, 0xE7, 0xE7, 0xDB, 0xBD, 0x7E};
+
+   for (int t = 0; t < 3; t++) {
+      for (int i = 0; i < 8; i++) {
+         output = patrones[i];
+         on_time = 100; /* Tiempo de espera en milisegundos */
+         disp_binary(output);
+         delay(on_time);
+      }
+   }
+}
+
 
 int main() {
     int intentos = 0;
@@ -126,7 +140,7 @@ int main() {
                 printf("2 - Choque\n");
                 printf("3 - Carrera\n");
                 printf("4 - Formula 1\n");
-                printf("5 - Función 5\n");
+                printf("5 - Choque Invertido\n");
                 printf("6 - Salir\n");
                 printf("Ingrese su opción: ");
                 scanf("%d", &opcion);
@@ -139,13 +153,13 @@ int main() {
                         choque();
                         break;
                     case 3:
-                        carrera();
+                        funcion3();
                         break;
                     case 4:
                         f1();
                         break;
                     case 5:
-                        funcion5();
+                        choqueinv();
                         break;
                     case 6:
                         printf("Usted ha salido del sistema\n");
