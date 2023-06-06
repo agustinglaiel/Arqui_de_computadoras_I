@@ -3,14 +3,15 @@
 #include <stdbool.h>
 #include <string.h>
 #include <termios.h>
+#include <stdlib.h>
+#include <ncurses.h>
 
 void disp_binary(int);
 void delay(int);
 void autofantastico();
 void choque();
 void f1();
-void choqueinv();
-void hidePasswordInput();
+void bondi();
 
 void funcion3() {
     printf("Ha seleccionado la función 3\n");
@@ -26,21 +27,11 @@ void disp_binary(int i)
    int t;
    for (t = 128; t > 0; t = t / 2) {
       if (i & t)
-         printf("1 ");
+         printf("* ");
       else
-         printf("0 ");
+         printf("_ ");
    }
    printf("\n");
-}
-
-void hidePasswordInput() {
-    struct termios old_term, new_term;
-
-    // Desactivar el eco del teclado
-    tcgetattr(fileno(stdin), &old_term);
-    new_term = old_term;
-    new_term.c_lflag &= ~ECHO;
-    tcsetattr(fileno(stdin), TCSANOW, &new_term);
 }
 
 void autofantastico()
@@ -74,21 +65,28 @@ void autofantastico()
    }
 }
 
-void choque()
-{
+void choque() {
    unsigned char output;
    int on_time;  /* set holding time */
-
    unsigned char patrones[] = {0x81, 0x42, 0x24, 0x18, 0x24, 0x42, 0x81};
 
-   for (int t = 0; t < 5; t++) {
+   while (true) {
       for (int i = 0; i < 7; i++) {
          output = patrones[i];
          on_time = 200; /* Tiempo de espera en milisegundos */
          disp_binary(output);
          delay(on_time);
          printf("\033[A\r"); // Mover el cursor a la línea anterior y al inicio
+      }
 
+      // Leer el carácter ingresado por el usuario
+      int c = getchar();
+
+      // Verificar si el carácter es 'q' o 'Esc'
+      if (c == 'q' || c == 27) {
+         return;
+         system("clear"); // Borrar la pantalla
+         
       }
    }
 }
@@ -97,6 +95,7 @@ void f1() {
     unsigned char output;
     char t;
     int on_time;  /* set holding time */
+    printf("Has elegido la opcion de F1:\n\n");
 
     output = 0x80;
 
@@ -115,17 +114,17 @@ void f1() {
     printf("\033[A\r"); // Mover el cursor a la línea anterior y al inicio
 }
 
-void choqueinv()
+void bondi()
 {
    unsigned char output;
    int on_time;  /* set holding time */
 
-   unsigned char patrones[] = {0x7E, 0xBD, 0xDB, 0xE7, 0xDB, 0xBD, 0x7E};
+   unsigned char patrones[] = {0x80, 0xC0, 0xE0, 0xF0, 0xB8, 0x9C, 0x4E, 0x27, 0x13, 0x09, 0x04};
 
    for (int t = 0; t < 5; t++) {
-      for (int i = 0; i < 7; i++) {
+      for (int i = 0; i < 11; i++) {
          output = patrones[i];
-         on_time = 200; /* Tiempo de espera en milisegundos */
+         on_time = 500; /* Tiempo de espera en milisegundos */
          disp_binary(output);
          delay(on_time);
          printf("\033[A\r"); // Mover el cursor a la línea anterior y al inicio
@@ -139,18 +138,29 @@ int main() {
     struct termios old_term, new_term;
 
     while (intentos < 3) {
-        char password[6];
+                char password[50];
+        int passwordLength;
         
-        printf("Ingrese su password de 5 dígitos: ");
-        fflush(stdout);
-
-        hidePasswordInput();
-
-        // Leer la contraseña como una cadena de caracteres
-        scanf("%5s", password);
-
+        printf("Ingrese su password: ");
+        // Desactivar el eco del teclado
+        tcgetattr(fileno(stdin), &old_term);
+        new_term = old_term;
+        new_term.c_lflag &= ~ECHO;
+        tcsetattr(fileno(stdin), TCSANOW, &new_term);
+        
+        // Leer la contraseña
+        fgets(password, sizeof(password), stdin);
+        
+        // Restaurar la configuración original del teclado
+        tcsetattr(fileno(stdin), TCSANOW, &old_term);
+        
+        // Eliminar el salto de línea del final de la contraseña
+        passwordLength = strlen(password);
+        if (password[passwordLength - 1] == '\n')
+            password[passwordLength - 1] = '\0';
+        
         // Verificar si la contraseña es correcta
-        if (strcmp(password, clave) == 0) {
+        if (strncmp(password, clave, strlen(clave)) == 0) {
             printf("\nBienvenido al Sistema!\n");
 
             int opcion;
@@ -161,10 +171,12 @@ int main() {
                 printf("2 - Choque\n");
                 printf("3 - Carrera\n");
                 printf("4 - Formula 1\n");
-                printf("5 - Choque Invertido\n");
+                printf("5 - Se me pasó el bondi\n");
                 printf("6 - Salir\n");
                 printf("Ingrese su opción: ");
                 scanf("%d", &opcion);
+                
+                system("clear"); // Borrar la pantalla
 
                 switch (opcion) {
                     case 1:
@@ -180,7 +192,7 @@ int main() {
                         f1();
                         break;
                     case 5:
-                        choqueinv();
+                        bondi();
                         break;
                     case 6:
                         printf("Usted ha salido del sistema\n");
@@ -188,6 +200,8 @@ int main() {
                     default:
                         printf("Opción no válida\n");
                 }
+                system("clear"); // Borrar la pantalla
+
             }
         } else {
             printf("Password no válida\n");
