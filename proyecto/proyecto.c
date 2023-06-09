@@ -6,16 +6,13 @@
 #include <stdlib.h>
 #include <ncurses.h>
 
+
 void disp_binary(int);
 void delay(int);
 void autofantastico();
 void choque();
 void f1();
 void bondi();
-
-void funcion3() {
-    printf("Ha seleccionado la función 3\n");
-}
 
 void delay(int time)
 {
@@ -138,7 +135,7 @@ int main() {
     struct termios old_term, new_term;
 
     while (intentos < 3) {
-                char password[50];
+        char password[50];
         int passwordLength;
         
         printf("Ingrese su password: ");
@@ -169,10 +166,9 @@ int main() {
                 printf("Seleccione una función:\n");
                 printf("1 - Auto Fantástico\n");
                 printf("2 - Choque\n");
-                printf("3 - Carrera\n");
-                printf("4 - Formula 1\n");
-                printf("5 - Se me pasó el bondi\n");
-                printf("6 - Salir\n");
+                printf("3 - Formula 1\n");
+                printf("4 - Se me pasó el bondi\n");
+                printf("5 - Salir\n");
                 printf("Ingrese su opción: ");
                 scanf("%d", &opcion);
                 
@@ -186,22 +182,18 @@ int main() {
                         choque();
                         break;
                     case 3:
-                        funcion3();
-                        break;
-                    case 4:
                         f1();
                         break;
-                    case 5:
+                    case 4:
                         bondi();
                         break;
-                    case 6:
+                    case 5:
                         printf("Usted ha salido del sistema\n");
                         return 0;
                     default:
                         printf("Opción no válida\n");
                 }
                 system("clear"); // Borrar la pantalla
-
             }
         } else {
             printf("Password no válida\n");
