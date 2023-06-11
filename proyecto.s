@@ -1,9 +1,35 @@
-//FUNCION BONDI
+//autof.s 
 
-.global bondi
-bondi:
+// prj.s
+// 23 de Mayo de 2022
+// Arqui I UCC
+
+.text
+
+.global main
+main:
+      LDR R3, =array // load base address of a into R3
+      ... more code here
+done: NOP            // dummy instruction for breakpoint
+      MOV NPC,L       // return from main
+
+.data
+array:
+      .byte 0x08
+      .byte 0x10
+      .byte 0xFF
+      ... more data here
+.end
+
+
+//ESTO DE ARRIBA ES LA PLANILLA CORREGIDA
+//LO DE ABAJO FUNCIONES DEL PROFE QUE TENEMOS QUE CORREGIR CON LO DE ARRIBA
+
+
+.global autof
+autof:
 	PUSH	 {R4, R5, LR}
-	MOV R4, #11
+	MOV R4, #15
 	LDR R5, =array
 ;
 loop: LDBR R0, [R5], #1
@@ -19,22 +45,58 @@ loop: LDBR R0, [R5], #1
 ;
 	POP {R4, R5, R6, PC} //RETURN FROM SUBROUTINE
 
-//FUNCION FORMULA 1 
+//
 
-.global formula1
-formula1:
+.global choquef
+choquef:
+	PUSH {R4, R5, R6, LR}
+	MOV R4, #8
+	LDR R5, =choque
+;
+ciclo: LDRB R6, [R5], #1
+		MOV R0, R6
+		BL disp_binary
+		MVN R0,R6
+		BL leds
+		MOV R0, #200;
+		BL delayMillis;
+;
+		SUBS R4, R4, #1;
+		BNE ciclo
+;
+		POP {R4, R5, R6, PC}
+
+
+.data
+array:
+	.byte 0x80
+	.byte 0xC0
+	.byte 0xE0
+	.byte 0xF0
+	.byte 0xB8
+	.byte 0x9C
+	.byte 0x4E
+	.byte 0x27
+	.byte 0x13
+	.byte 0x09
+	.byte 0x04
+
+.end
+
+
+//FUNCION FORMULA 1 (CREEMOS QUE ESTA)
 
 MOV     r0, #2 
 MOV     SP, #pilaptr
-BL      Formula1
+BL      BateriaBaja
 end
 
-Formula1
+BateriaBaja
     STMFD   SP!, {r4, r5, r6, r7, LR} ; Almaceno los registros en la pila
     MOV     r6, r0 
     MOV     r4, #0x01 ; Inicializo r4 con 00000001
 
-ForFormula1
+ForBateriaBaja
     MOV     r0, r4 
     BL      Display
     MOV     r0, r6 
@@ -43,7 +105,7 @@ ForFormula1
     BL      SystemCLS
     MOV     r4, r4, LSL #1 ; Desplazo los bits hacia la izquierda
     SUBS    r5, r5, #1
-    BNE     ForFormula1
+    BNE     ForBateriaBaja
     BEQ     Termino
 
 Display
@@ -74,22 +136,3 @@ Termino
 
 pila        FILL        40
 pilaptr     DCB         1
-
-
-
-
-.data
-array:
-	.byte 0x80
-	.byte 0xC0
-	.byte 0xE0
-	.byte 0xF0
-	.byte 0xB8
-	.byte 0x9C
-	.byte 0x4E
-	.byte 0x27
-	.byte 0x13
-	.byte 0x09
-	.byte 0x04
-
-.end

@@ -36,6 +36,7 @@ void autofantastico()
    unsigned char output;
    char t;
    int on_time;  /* set holding time */
+   printf("Has elegido la Función del Auto Fantástico:\n(Para salir pulsa la tecla 'Esc' ó 'q'. Para subir la velocidad 'w' y para bajar 's')\n\n");   
 
    for (t = 0; t < 5; t++) {
       output = 0x80;
@@ -62,12 +63,15 @@ void autofantastico()
    }
 }
 
+
 void choque() {
    unsigned char output;
    int on_time;  /* set holding time */
+   printf("Has elegido la Función del Choque:\n(Para salir pulsa la tecla 'Esc' ó 'q'. Para subir la velocidad 'w' y para bajar 's')\n\n");
+
    unsigned char patrones[] = {0x81, 0x42, 0x24, 0x18, 0x24, 0x42, 0x81};
 
-   while (true) {
+   while (1) {
       for (int i = 0; i < 7; i++) {
          output = patrones[i];
          on_time = 200; /* Tiempo de espera en milisegundos */
@@ -76,14 +80,14 @@ void choque() {
          printf("\033[A\r"); // Mover el cursor a la línea anterior y al inicio
       }
 
-      // Leer el carácter ingresado por el usuario
-      int c = getchar();
+      // Leer y descartar el carácter ingresado por el usuario
+      int c;
+      while ((c = getchar()) != '\n' && c != EOF) {}
 
       // Verificar si el carácter es 'q' o 'Esc'
       if (c == 'q' || c == 27) {
-         return;
          system("clear"); // Borrar la pantalla
-         
+         return;
       }
    }
 }
@@ -92,7 +96,7 @@ void f1() {
     unsigned char output;
     char t;
     int on_time;  /* set holding time */
-    printf("Has elegido la opcion de F1:\n\n");
+    printf("Has elegido la Función de Fórmula 1:\n(Para salir pulsa la tecla 'Esc' ó 'q'. Para subir la velocidad 'w' y para bajar 's')\n\n");
 
     output = 0x80;
 
@@ -115,6 +119,7 @@ void bondi()
 {
    unsigned char output;
    int on_time;  /* set holding time */
+   printf("Has elegido la Función del Bondi:\n(Para salir pulsa la tecla 'Esc' ó 'q'. Para subir la velocidad 'w' y para bajar 's')\n\n");
 
    unsigned char patrones[] = {0x80, 0xC0, 0xE0, 0xF0, 0xB8, 0x9C, 0x4E, 0x27, 0x13, 0x09, 0x04};
 
