@@ -5,7 +5,7 @@
 #include <termios.h>
 #include <stdlib.h>
 #include <ncurses.h>
-
+//#include "EasyPIO.h"
 
 void disp_binary(int);
 void delay(int);
@@ -13,15 +13,30 @@ void autofantastico();
 void choque();
 void f1();
 void bondi();
+//void external bondi_asm()
 
 void delay(int time)
 {
    usleep(time * 1000); /* Dormir en microsegundos */
 }
 
+void leds(int i)
+{
+   const char led[] = {14,15,18,23,24,25,8,7};
+   int indice = 0;
+   int t;
+   for (t = 128; t > 0; t = t / 2) {
+      if (i & t)
+         pinMode(led[indice], 1);
+      else
+         pinMode(led[indice], 0);
+   }
+}
+
 void disp_binary(int i)
 {
    int t;
+   //leds(i);
    for (t = 128; t > 0; t = t / 2) {
       if (i & t)
          printf("* ");
@@ -202,6 +217,12 @@ void bondi()
 }
 
 int main() {
+    //pioInit();
+    //const char led[] = {14,15,18,23,24,25,8,7};
+    //for(i=0; i<8; i++){
+  	//pinMode(led[i], OUTPUT); // Configure los 8 pines para los LEDs como salidas en main
+    //}
+    //leds(0xFF);
     int intentos = 0;
     char clave[] = "12345";  // Clave predefinida como cadena de caracteres
     struct termios old_term, new_term;
