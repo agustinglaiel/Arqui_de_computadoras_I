@@ -1,18 +1,18 @@
 //FUNCION BONDI
 
-.global bondi
-bondi:
+.global bondi_asm
+bondi_asm:
 	PUSH	 {R4, R5, LR}
 	MOV R4, #13
 	LDR R5, =array
 ;
-loop: LDBR R0, [R5], #1
-	MOV R0, R6
+loop: LDRB R0, [R5], #1
+	MOV R6, R0
 	BL disp_binary
 	MVN R0, R6
 	BL leds
-	MOV R0, #300;
-	BL delayMillis;
+	MOV R0, #200;
+	BL delay;
 ;
 	SUBS R4, R4, #1;
 	BNE loop

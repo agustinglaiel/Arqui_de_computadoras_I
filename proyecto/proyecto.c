@@ -5,7 +5,7 @@
 #include <termios.h>
 #include <stdlib.h>
 #include <ncurses.h>
-//#include "EasyPIO.h"
+#include "EasyPIO.h"
 
 void disp_binary(int);
 void delay(int);
@@ -13,7 +13,8 @@ void autofantastico();
 void choque();
 void f1();
 void bondi();
-//void external bondi_asm()
+//extern void bondi_asm();
+extern void formula1();
 
 void delay(int time)
 {
@@ -27,16 +28,18 @@ void leds(int i)
    int t;
    for (t = 128; t > 0; t = t / 2) {
       if (i & t)
-         pinMode(led[indice], 1);
+         digitalWrite(led[indice], 1);
       else
-         pinMode(led[indice], 0);
+         digitalWrite(led[indice], 0);
+      indice++;
    }
 }
+
 
 void disp_binary(int i)
 {
    int t;
-   //leds(i);
+   leds(i);
    for (t = 128; t > 0; t = t / 2) {
       if (i & t)
          printf("* ");
@@ -109,6 +112,8 @@ void autofantastico()
 void choque() {
    unsigned char output;
    int on_time = 200;  /* set holding time */
+   int min_time = 20; // Límite mínimo de tiempo
+   int max_time = 500; // Límite máximo de tiempo
 
    unsigned char patrones[] = {0x81, 0x42, 0x24, 0x18, 0x24, 0x42, 0x81};
 
@@ -134,15 +139,20 @@ void choque() {
             return;
          } else if (c == 'w') {
             on_time -= 20; // Subir la velocidad en 20 milisegundos
+            if (on_time < min_time) {
+               on_time = min_time; // Asegurarse de que la velocidad no sea menor que el límite mínimo
+            }
          } else if (c == 's') {
             on_time += 20; // Bajar la velocidad en 20 milisegundos
+            if (on_time > max_time) {
+               on_time = max_time; // Asegurarse de que la velocidad no sea mayor que el límite máximo
+            }
          }
       }
    }
 
    endwin(); // Finalizar el modo ncurses
 }
-
 void f1() {
     unsigned char output;
     int on_time=500;  /* set holding time */
@@ -217,12 +227,12 @@ void bondi()
 }
 
 int main() {
-    //pioInit();
-    //const char led[] = {14,15,18,23,24,25,8,7};
-    //for(i=0; i<8; i++){
-  	//pinMode(led[i], OUTPUT); // Configure los 8 pines para los LEDs como salidas en main
-    //}
-    //leds(0xFF);
+    pioInit();
+    const char led[] = {14,15,18,23,24,25,8,7};
+    for(int i=0; i<8; i++){
+  	pinMode(led[i], OUTPUT); // Configure los 8 pines para los LEDs como salidas en main
+    }
+    leds(0xFF);
     int intentos = 0;
     char clave[] = "12345";  // Clave predefinida como cadena de caracteres
     struct termios old_term, new_term;
@@ -275,9 +285,11 @@ int main() {
                         choque();
                         break;
                     case 3:
-                        f1();
+                        formula1();
+                        //f1();
                         break;
                     case 4:
+                        //bondi_asm();
                         bondi();
                         break;
                     case 5:
