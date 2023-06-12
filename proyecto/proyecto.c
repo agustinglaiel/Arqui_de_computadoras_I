@@ -5,7 +5,7 @@
 #include <termios.h>
 #include <stdlib.h>
 #include <ncurses.h>
-//#include "EasyPIO.h"
+#include "EasyPIO.h"
 
 void disp_binary(int);
 void delay(int);
@@ -14,13 +14,14 @@ void choque();
 void f1();
 void bondi();
 //extern void bondi_asm();
-//extern void formula1();
+//extern void bondi_inf();
+extern void formula1();
 
 void delay(int time)
 {
    usleep(time * 1000); /* Dormir en microsegundos */
 }
-/*
+
 void leds(int i)
 {
    const char led[] = {14,15,18,23,24,25,8,7};
@@ -34,12 +35,12 @@ void leds(int i)
       indice++;
    }
 }
-*/
+
 
 void disp_binary(int i)
 {
    int t;
-   //leds(i);
+   leds(i);
    for (t = 128; t > 0; t = t / 2) {
       if (i & t)
          printf("* ");
@@ -284,14 +285,14 @@ void bondi()
    endwin(); // Finalizar el modo ncurses
 }
 int main() {
-    /*
+    
     pioInit();
     const char led[] = {14,15,18,23,24,25,8,7};
     for(int i=0; i<8; i++){
   	 pinMode(led[i], OUTPUT); // Configure los 8 pines para los LEDs como salidas en main
     }
-    leds(0xFF);
-    */
+    leds(0x00);
+    
     int intentos = 0;
     char clave[] = "12345";  // Clave predefinida como cadena de caracteres
 
@@ -327,11 +328,12 @@ int main() {
                         choque();
                         break;
                     case 3:
-                        //formula1();
-                        f1();
+                        formula1();
+                        //f1();
                         break;
                     case 4:
                         //bondi_asm();
+                        //bondi_inf();
                         bondi();
                         break;
                     case 5:
